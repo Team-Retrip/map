@@ -2,9 +2,9 @@ package com.retrip.map.domain.exception.common
 
 class EntityNotFoundException: BusinessException {
 
-    constructor(): super(ErrorCode.ILLEGAL_STATE) {}
+    constructor(): super(ErrorCode.ENTITY_NOT_FOUND) {}
     constructor(errorCode: ErrorCode): super(errorCode) {}
-    constructor(message: String): super(ErrorCode.ILLEGAL_STATE, message) {}
+    constructor(message: String): super(ErrorCode.ENTITY_NOT_FOUND, message) {}
     constructor(errorCode: ErrorCode, message: String): super(errorCode, message) {}
 
 }
