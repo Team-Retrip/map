@@ -5,11 +5,13 @@ import com.querydsl.core.types.Projections
 import com.querydsl.jpa.impl.JPAQueryFactory
 import com.retrip.map.application.`in`.response.LocationResponse
 import com.retrip.map.application.out.repository.LocationQueryRepository
+import com.retrip.map.domain.entity.Location
 import com.retrip.map.domain.entity.QLocation.location
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
+import java.time.LocalDate
 import java.util.*
 
 
@@ -47,6 +49,16 @@ class LocationQuerydslRepository(
             )
             .fetchOne()
         return PageImpl(locations, page, count ?: 0)
+    }
+
+    override fun findLocationsByEditedAt(editedAt: LocalDate): List<Location> {
+        val startOfDay = editedAt.atStartOfDay()
+        val endOfDay = editedAt.plusDays(1).atStartOfDay()
+        return query.selectFrom(location)
+            .where(
+                location.editedAt.goe(startOfDay),
+                location.createdAt.lt(endOfDay)
+            ).fetch()
     }
 
     private fun eqLocation(id: UUID?): Predicate? {
