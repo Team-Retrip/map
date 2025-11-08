@@ -7,6 +7,7 @@ import jakarta.persistence.Id
 import org.springframework.data.elasticsearch.annotations.Document
 import org.springframework.data.elasticsearch.annotations.Field
 import org.springframework.data.elasticsearch.annotations.FieldType
+import java.time.LocalDateTime
 import java.util.*
 
 @Document(indexName = "locations")
@@ -28,7 +29,11 @@ data class LocationDocument(
     @Field(type = FieldType.Double)
     val latitude: Double?,
     @Field(type = FieldType.Double)
-    val longitude: Double?
+    val longitude: Double?,
+    @Field(type = FieldType.Date)
+    val createdAt: LocalDateTime?,
+    @Field(type = FieldType.Date)
+    val editedAt: LocalDateTime?,
 ) {
     companion object {
         fun of(location: Location): LocationDocument {
@@ -42,6 +47,8 @@ data class LocationDocument(
                 location.address?.roadAddress,
                 location.geoPoint?.latitude,
                 location.geoPoint?.longitude,
+                location.createdAt,
+                location.editedAt
             )
         }
     }
