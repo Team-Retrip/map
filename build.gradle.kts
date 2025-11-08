@@ -35,14 +35,15 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-api:2.8.5")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5")
     implementation("com.querydsl:querydsl-jpa:5.1.0:jakarta")
+
     kapt("com.querydsl:querydsl-apt:5.1.0:jakarta") // annotationProcessor → kapt로 변경
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("com.h2database:h2")
+    runtimeOnly("com.mysql:mysql-connector-j")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
-
+    testImplementation("org.springframework.batch:spring-batch-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")

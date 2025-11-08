@@ -9,6 +9,7 @@ import jakarta.persistence.Column
 import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
+import jakarta.persistence.Table
 import jakarta.persistence.Version
 import lombok.AccessLevel
 import lombok.NoArgsConstructor
@@ -16,6 +17,7 @@ import lombok.Setter
 import java.util.*
 
 @Entity
+@Table(name = "location")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Setter(value = AccessLevel.PROTECTED)
 class Location(
