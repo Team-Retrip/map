@@ -7,5 +7,5 @@ import java.util.UUID
 
 @Repository
 interface LocationElasticRepository: ElasticsearchRepository<LocationDocument, UUID> {
-
+    fun findFirstByOrderByEditedAtDesc(): LocationDocument?
 }

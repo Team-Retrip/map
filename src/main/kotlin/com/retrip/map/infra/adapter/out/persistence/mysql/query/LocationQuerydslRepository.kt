@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 
 
@@ -51,13 +52,10 @@ class LocationQuerydslRepository(
         return PageImpl(locations, page, count ?: 0)
     }
 
-    override fun findLocationsByEditedAt(editedAt: LocalDate): List<Location> {
-        val startOfDay = editedAt.atStartOfDay()
-        val endOfDay = editedAt.plusDays(1).atStartOfDay()
+    override fun findLocationsByEditedAt(editedAt: LocalDateTime): List<Location> {
         return query.selectFrom(location)
             .where(
-                location.editedAt.goe(startOfDay),
-                location.createdAt.lt(endOfDay)
+                location.editedAt.gt(editedAt)
             ).fetch()
     }
 
