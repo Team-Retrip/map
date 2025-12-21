@@ -1,17 +1,11 @@
 package com.retrip.map.infra.adapter.`in`.presentation
 
-import com.retrip.map.application.`in`.request.LocationCreateRequest
 import com.retrip.map.application.`in`.request.LocationDetailCreateRequest
 import com.retrip.map.application.`in`.request.LocationDetailUpdateRequest
-import com.retrip.map.application.`in`.request.LocationUpdateRequest
-import com.retrip.map.application.`in`.response.LocationCreateResponse
 import com.retrip.map.application.`in`.response.LocationDetailCreateResponse
 import com.retrip.map.application.`in`.response.LocationDetailResponse
 import com.retrip.map.application.`in`.response.LocationDetailUpdateResponse
-import com.retrip.map.application.`in`.response.LocationResponse
-import com.retrip.map.application.`in`.response.LocationUpdateResponse
 import com.retrip.map.application.`in`.usecase.LocationDetailUseCase
-import com.retrip.map.application.`in`.usecase.LocationUseCase
 import com.retrip.map.infra.adapter.`in`.presentation.common.ApiResponse
 import io.swagger.v3.oas.annotations.media.Schema
 import lombok.RequiredArgsConstructor
@@ -31,46 +25,46 @@ import java.util.*
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/location")
-class LocationController(
-    private val locationUseCase: LocationUseCase
+@RequestMapping("/location-detail")
+class LocationDetailController(
+    private val locationDetailUseCase: LocationDetailUseCase
 ) {
 
     @GetMapping("")
-    @Schema(description = "장소 전체 조회")
-    fun getLocation(
-        @RequestParam(name = "locationId") id: UUID?,
+    @Schema(description = "장소 상세 전체 조회")
+    fun getLocationDetail(
+        @RequestParam(name = "locationDetailId") id: UUID?,
         @PageableDefault(size = 10, page = 0) page: Pageable
-    ): ApiResponse<Page<LocationResponse>> {
-        val result = locationUseCase.getLocation(id, page)
+    ): ApiResponse<Page<LocationDetailResponse>> {
+        val result = locationDetailUseCase.getLocationDetail(id, page)
         return ApiResponse.ok(result)
     }
 
     @PostMapping("")
-    @Schema(description = "장소 등록")
-    fun createLocation(
-        @RequestBody request: LocationCreateRequest
-    ): ApiResponse<LocationCreateResponse> {
-        val result = locationUseCase.createLocation(request)
+    @Schema(description = "장소 상세 등록")
+    fun createLocationDetail(
+        @RequestBody request: LocationDetailCreateRequest
+    ): ApiResponse<LocationDetailCreateResponse> {
+        val result = locationDetailUseCase.createLocationDetail(request)
         return ApiResponse.create(result)
     }
 
-    @PutMapping("/{locationId}")
-    @Schema(description = "장소 수정")
-    fun updateLocation(
-        @PathVariable locationId: UUID,
-        @RequestBody request: LocationUpdateRequest
-    ): ApiResponse<LocationUpdateResponse> {
-        val result = locationUseCase.updateLocation(locationId, request)
+    @PutMapping("/{locationDetailId}")
+    @Schema(description = "장소 상세 수정")
+    fun updateLocationDetail(
+        @PathVariable locationDetailId: UUID,
+        @RequestBody request: LocationDetailUpdateRequest
+    ): ApiResponse<LocationDetailUpdateResponse> {
+        val result = locationDetailUseCase.updateLocationDetail(locationDetailId, request)
         return ApiResponse.ok(result)
     }
 
-    @DeleteMapping("/{locationId}")
-    @Schema(description = "장소 삭제")
-    fun deleteLocation(
-        @PathVariable locationId: UUID
+    @DeleteMapping("/{locationDetailId}")
+    @Schema(description = "장소 상세 삭제")
+    fun deleteLocationDetail(
+        @PathVariable locationDetailId: UUID
     ): ApiResponse<Unit> {
-        locationUseCase.deleteLocation(locationId)
+        locationDetailUseCase.deleteLocationDetail(locationDetailId)
         return ApiResponse.noContent()
     }
 

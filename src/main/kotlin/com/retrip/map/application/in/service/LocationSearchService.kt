@@ -9,8 +9,10 @@ import com.retrip.map.application.`in`.response.LocationDetailCreateResponse
 import com.retrip.map.application.`in`.response.LocationDetailResponse
 import com.retrip.map.application.`in`.response.LocationDetailUpdateResponse
 import com.retrip.map.application.`in`.response.LocationResponse
+import com.retrip.map.application.`in`.response.LocationSearchResponse
 import com.retrip.map.application.`in`.response.LocationUpdateResponse
 import com.retrip.map.application.`in`.usecase.LocationDetailUseCase
+import com.retrip.map.application.`in`.usecase.LocationSearchUseCase
 import com.retrip.map.application.`in`.usecase.LocationUseCase
 import com.retrip.map.application.out.repository.LocationDetailQueryRepository
 import com.retrip.map.application.out.repository.LocationDetailRepository
@@ -20,7 +22,6 @@ import com.retrip.map.application.out.repository.LocationRepository
 import com.retrip.map.domain.exception.LocationDetailNotFoundException
 import com.retrip.map.domain.exception.LocationNotFoundException
 import com.retrip.map.domain.exception.common.RequireException
-import com.retrip.map.infra.adapter.out.search.elasticsearch.entity.LocationDocument
 import lombok.RequiredArgsConstructor
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -33,48 +34,22 @@ import java.util.*
 @Service
 @RequiredArgsConstructor
 @Transactional
-class LocationService(
-    val locationRepository: LocationRepository,
-    val locationElasticRepository: LocationElasticRepository,
-    val locationQueryRepository: LocationQueryRepository
-) : LocationUseCase {
+class LocationSearchService(
+    val locationElasticRepository: LocationElasticRepository
+) : LocationSearchUseCase {
 
     @Transactional(readOnly = true)
-    override fun getLocation(id: UUID?, page: Pageable): Page<LocationResponse> {
-       return locationQueryRepository.findLocations(id, page)
+    override fun getLocation(name: String?, page: Pageable): Page<LocationSearchResponse> {
+        val locations = locationElasticRepository.findByNameContaining(name, page)
+        return locations.map {
+            LocationSearchResponse(
+                id = it.id,
+                name = it.name,
+                latitude = it.latitude,
+                longitude = it.longitude,
+            )
+        }
     }
 
-    override fun createLocation(request: LocationCreateRequest): LocationCreateResponse {
-        val location = locationRepository.save(request.to())
-        locationElasticRepository.save(LocationDocument.of(location))
-        return LocationCreateResponse(
-            location.id ?: throw LocationNotFoundException(),
-            location.name?.value ?: throw RequireException(),
-            location.geoPoint?.latitude,
-            location.geoPoint?.longitude,
-        )
-    }
-
-    override fun updateLocation(id: UUID, request: LocationUpdateRequest): LocationUpdateResponse {
-        val location = locationRepository.findByIdOrNull(id) ?: throw LocationNotFoundException()
-        locationElasticRepository.deleteById(id)
-        location.update(
-            request.name,
-            request.latitude,
-            request.longitude,
-        )
-        locationElasticRepository.save(LocationDocument.of(location))
-        return LocationUpdateResponse(
-            location.id ?: throw LocationDetailNotFoundException(),
-            location.name?.value ?: throw RequireException(),
-            location.geoPoint?.latitude,
-            location.geoPoint?.longitude,
-        )
-    }
-
-    override fun deleteLocation(locationId: UUID) {
-        locationRepository.deleteById(locationId)
-        locationElasticRepository.deleteById(locationId)
-    }
 }
 

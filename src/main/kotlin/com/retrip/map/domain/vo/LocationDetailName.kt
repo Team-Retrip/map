@@ -5,10 +5,9 @@ import jakarta.persistence.Embeddable
 
 
 @Embeddable
-class LocationCategory() {
-    @Column(name = "category")
+class LocationDetailName() {
+    @Column(name = "name")
     var value: String = ""
-
 
     constructor(value: String) : this() {
         validate(value)
@@ -16,6 +15,6 @@ class LocationCategory() {
     }
 
     private fun validate(value: String) {
-        require(value.isNotBlank()) { "카테고리는 필수입니다." }
+        require(value.isNotBlank()) { "장소명은 필수입니다." }
     }
 }

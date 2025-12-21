@@ -6,22 +6,12 @@ import io.swagger.v3.oas.annotations.media.Schema
 @Schema(description = "장소 생성 Request")
 data class LocationCreateRequest(
     val name: String,
-    val category: String,
-    val description: String?,
-    val telephone: String?,
-    val address: String?,
-    val roadAddress: String?,
     val latitude: Double,
     val longitude: Double,
 ) {
     fun to(): Location {
         return Location.create(
             name,
-            category,
-            description,
-            telephone,
-            address,
-            roadAddress,
             latitude,
             longitude
         )

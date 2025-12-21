@@ -1,10 +1,9 @@
 package com.retrip.map.infra.adapter.`in`.batch
 
-import com.retrip.map.domain.entity.Location
-import com.retrip.map.infra.adapter.out.search.elasticsearch.entity.LocationDocument
+import com.retrip.map.domain.entity.LocationDetail
+import com.retrip.map.infra.adapter.out.search.elasticsearch.entity.LocationDetailDocument
 import org.springframework.batch.core.Job
 import org.springframework.batch.core.Step
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing
 import org.springframework.batch.core.job.builder.JobBuilder
 import org.springframework.batch.core.launch.support.RunIdIncrementer
 import org.springframework.batch.core.repository.JobRepository
@@ -41,13 +40,11 @@ class MapBatchConfig(
         jobRepository: JobRepository,
         transactionManager: PlatformTransactionManager
     ): Step {
-        return StepBuilder("map-step", jobRepository)
-            .chunk<List<Location>, List<LocationDocument>>(10, transactionManager)
+        return StepBuilder("detail-location-step", jobRepository)
+            .chunk<List<LocationDetail>, List<LocationDetailDocument>>(10, transactionManager)
             .reader(reader)
             .processor(processor)
             .writer(writer)
             .build()
     }
-
-
 }
