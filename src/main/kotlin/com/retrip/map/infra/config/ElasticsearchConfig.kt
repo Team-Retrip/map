@@ -19,7 +19,7 @@ class ElasticsearchConfig {
         val credentialsProvider = BasicCredentialsProvider()
         credentialsProvider.setCredentials(
             AuthScope.ANY,
-            UsernamePasswordCredentials("elastic", "61tkSdZs6lUk2Mfa+nq5")
+            UsernamePasswordCredentials("elastic", "test1234")
         )
 
         val sslContext = SSLContexts.custom()

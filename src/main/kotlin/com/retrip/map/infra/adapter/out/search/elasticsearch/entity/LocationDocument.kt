@@ -7,14 +7,19 @@ import jakarta.persistence.Id
 import org.springframework.data.elasticsearch.annotations.Document
 import org.springframework.data.elasticsearch.annotations.Field
 import org.springframework.data.elasticsearch.annotations.FieldType
+import org.springframework.data.elasticsearch.annotations.Mapping
+import org.springframework.data.elasticsearch.annotations.Setting
 import java.time.LocalDateTime
 import java.util.*
 
 @Document(indexName = "locations")
+@Setting(settingPath = "elasticsearch/settings/setting.json")
+@Mapping(mappingPath = "elasticsearch/mappings/mapping.json")
 data class LocationDocument(
+
     @Id
     val id: UUID,
-    @Field(type = FieldType.Text)
+    @Field(type = FieldType.Text, analyzer = "korean")
     val name: String,
     @Field(type = FieldType.Keyword)
     val category: String,
