@@ -1,5 +1,6 @@
 package com.retrip.map.domain.entity
 
+import com.retrip.map.domain.vo.LocationCountry
 import com.retrip.map.domain.vo.LocationDetailGeoPoint
 import com.retrip.map.domain.vo.LocationDetailName
 import com.retrip.map.domain.vo.LocationGeoPoint
@@ -28,6 +29,9 @@ class Location(
     var name: LocationName? = null,
 
     @Embedded
+    var country: LocationCountry? = null,
+
+    @Embedded
     var geoPoint: LocationGeoPoint? = null,
 
     @Version
@@ -35,22 +39,26 @@ class Location(
 ): BaseEntity() {
     fun update(
         name: String,
+        country: String,
         latitude: Double,
         longitude: Double
     ) {
         this.name = LocationName(name)
+        this.country = LocationCountry(country)
         this.geoPoint = LocationGeoPoint(latitude, longitude)
     }
 
     companion object {
         fun create(
             name: String,
+            country: String,
             latitude: Double,
             longitude: Double
         ): Location {
             return Location(
                 id = UUID.randomUUID(),
                 name = LocationName(name),
+                country = LocationCountry(country),
                 geoPoint = LocationGeoPoint(latitude, longitude)
             )
         }

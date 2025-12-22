@@ -11,5 +11,5 @@ import org.springframework.data.domain.Pageable
 import java.util.*
 
 interface LocationSearchUseCase {
-    fun getLocation(name: String?, page: Pageable): Page<LocationSearchResponse>
+    fun getLocation(searchText: String?, page: Pageable): Page<LocationSearchResponse>
 }

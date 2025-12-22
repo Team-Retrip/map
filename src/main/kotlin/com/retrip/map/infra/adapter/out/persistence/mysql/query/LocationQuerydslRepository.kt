@@ -6,7 +6,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory
 import com.retrip.map.application.`in`.response.LocationResponse
 import com.retrip.map.application.out.repository.LocationQueryRepository
 import com.retrip.map.domain.entity.QLocation.location
-import com.retrip.map.domain.entity.QLocationDetail.locationDetail
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
@@ -26,6 +25,7 @@ class LocationQuerydslRepository(
                 LocationResponse::class.java,
                 location.id,
                 location.name.value,
+                location.country.value,
                 location.geoPoint.latitude,
                 location.geoPoint.longitude
             )
@@ -48,6 +48,6 @@ class LocationQuerydslRepository(
     }
 
     private fun eqLocation(id: UUID?): Predicate? {
-        return id?.let { locationDetail.id.eq(it) }
+        return id?.let { location.id.eq(it) }
     }
 }

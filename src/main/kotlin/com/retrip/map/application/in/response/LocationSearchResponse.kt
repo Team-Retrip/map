@@ -1,5 +1,6 @@
 package com.retrip.map.application.`in`.response
 
+import com.retrip.map.domain.vo.LocationCountry
 import io.swagger.v3.oas.annotations.media.Schema
 import java.util.UUID
 
@@ -9,6 +10,8 @@ data class LocationSearchResponse(
     val id: UUID,
     @Schema(description = "장소명")
     val name: String,
+    @Schema(description = "국가")
+    val country: String,
     @Schema(description = "장소 위도")
     val latitude: Double?,
     @Schema(description = "장소 경도")

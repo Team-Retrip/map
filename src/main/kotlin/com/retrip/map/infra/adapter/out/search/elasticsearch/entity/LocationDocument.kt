@@ -1,7 +1,6 @@
 package com.retrip.map.infra.adapter.out.search.elasticsearch.entity
 
 import com.retrip.map.domain.entity.Location
-import com.retrip.map.domain.entity.QLocationDetail.locationDetail
 import com.retrip.map.domain.exception.LocationNotFoundException
 import com.retrip.map.domain.exception.common.RequireException
 import jakarta.persistence.Id
@@ -10,7 +9,6 @@ import org.springframework.data.elasticsearch.annotations.Field
 import org.springframework.data.elasticsearch.annotations.FieldType
 import org.springframework.data.elasticsearch.annotations.Mapping
 import org.springframework.data.elasticsearch.annotations.Setting
-import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.*
 
@@ -22,6 +20,10 @@ data class LocationDocument(
     val id: UUID,
     @Field(type = FieldType.Text, analyzer = "korean")
     val name: String,
+    @Field(type = FieldType.Text, analyzer = "korean")
+    val country: String,
+    @Field(type = FieldType.Text, analyzer = "korean")
+    val searchText: String,
     @Field(type = FieldType.Double)
     val latitude: Double?,
     @Field(type = FieldType.Double)
@@ -36,6 +38,8 @@ data class LocationDocument(
             return LocationDocument(
                 location.id ?: throw LocationNotFoundException(),
                 location.name?.value ?: throw RequireException(),
+                location.country?.value ?: throw RequireException(),
+                "${location.country?.value} + ${location.name?.value}",
                 location.geoPoint?.latitude,
                 location.geoPoint?.longitude,
                 location.createdAt?.toInstant(ZoneOffset.UTC)?.toEpochMilli(),
