@@ -15,6 +15,7 @@ spring:
   batch:
     job:
       name: "retrip-map"
+      enabled: false
     jdbc:
       initialize-schema: always
   jpa:

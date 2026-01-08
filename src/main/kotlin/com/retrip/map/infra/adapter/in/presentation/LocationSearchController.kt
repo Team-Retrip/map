@@ -9,14 +9,17 @@ import com.retrip.map.application.`in`.response.LocationDetailCreateResponse
 import com.retrip.map.application.`in`.response.LocationDetailResponse
 import com.retrip.map.application.`in`.response.LocationDetailUpdateResponse
 import com.retrip.map.application.`in`.response.LocationResponse
+import com.retrip.map.application.`in`.response.LocationSearchResponse
 import com.retrip.map.application.`in`.response.LocationUpdateResponse
 import com.retrip.map.application.`in`.usecase.LocationDetailUseCase
+import com.retrip.map.application.`in`.usecase.LocationSearchUseCase
 import com.retrip.map.application.`in`.usecase.LocationUseCase
 import com.retrip.map.infra.adapter.`in`.presentation.common.ApiResponse
 import io.swagger.v3.oas.annotations.media.Schema
 import lombok.RequiredArgsConstructor
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.domain.AbstractPersistable_.id
 import org.springframework.data.web.PageableDefault
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -31,48 +34,18 @@ import java.util.*
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/location")
-class LocationController(
-    private val locationUseCase: LocationUseCase
+@RequestMapping("/location-search")
+class LocationSearchController(
+    private val locationSearchUseCase: LocationSearchUseCase
 ) {
 
     @GetMapping("")
-    @Schema(description = "장소 전체 조회")
+    @Schema(description = "장소 검색 엔진 조회")
     fun getLocation(
-        @RequestParam(name = "locationId") id: UUID?,
-        @PageableDefault(size = 10, page = 0) page: Pageable
-    ): ApiResponse<Page<LocationResponse>> {
-        val result = locationUseCase.getLocation(id, page)
+        @PageableDefault(size = 10, page = 0) page: Pageable,
+        @RequestParam(name = "name", required = false) name: String?
+    ): ApiResponse<Page<LocationSearchResponse>> {
+        val result = locationSearchUseCase.getLocation(name, page)
         return ApiResponse.ok(result)
     }
-
-    @PostMapping("")
-    @Schema(description = "장소 등록")
-    fun createLocation(
-        @RequestBody request: LocationCreateRequest
-    ): ApiResponse<LocationCreateResponse> {
-        val result = locationUseCase.createLocation(request)
-        return ApiResponse.create(result)
-    }
-
-    @PutMapping("/{locationId}")
-    @Schema(description = "장소 수정")
-    fun updateLocation(
-        @PathVariable locationId: UUID,
-        @RequestBody request: LocationUpdateRequest
-    ): ApiResponse<LocationUpdateResponse> {
-        val result = locationUseCase.updateLocation(locationId, request)
-        return ApiResponse.ok(result)
-    }
-
-    @DeleteMapping("/{locationId}")
-    @Schema(description = "장소 삭제")
-    fun deleteLocation(
-        @PathVariable locationId: UUID
-    ): ApiResponse<Unit> {
-        locationUseCase.deleteLocation(locationId)
-        return ApiResponse.noContent()
-    }
-
-
 }

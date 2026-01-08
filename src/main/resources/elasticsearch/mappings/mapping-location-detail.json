@@ -1,0 +1,40 @@
+{
+  "properties": {
+    "id": {
+      "type": "keyword"
+    },
+    "name": {
+      "type": "text",
+      "analyzer": "korean"
+    },
+    "category": {
+      "type": "keyword"
+    },
+    "description": {
+      "type": "keyword"
+    },
+    "telephone": {
+      "type": "keyword"
+    },
+    "address": {
+      "type": "keyword"
+    },
+    "roadAddress": {
+      "type": "keyword"
+    },
+    "latitude": {
+      "type": "double"
+    },
+    "longitude": {
+      "type": "double"
+    },
+    "createdAt": {
+      "type": "date",
+      "format": "strict_date_optional_time||epoch_millis"
+    },
+    "editedAt": {
+      "type": "date",
+      "format": "strict_date_optional_time||epoch_millis"
+    }
+  }
+}

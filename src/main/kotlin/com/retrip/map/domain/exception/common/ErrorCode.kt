@@ -17,4 +17,5 @@ enum class ErrorCode(
     ILLEGAL_STATE(BAD_REQUEST, "Common-005", "Illegal state"),
 
     LOCATION_NOT_FOUND(BAD_REQUEST, "Location-001", "로케이션 엔티티를 찾을 수 없습니다."),
+    LOCATION_DETAIL_NOT_FOUND(BAD_REQUEST, "Location-002", "로케이션 디테일 엔티티를 찾을 수 없습니다."),
 }

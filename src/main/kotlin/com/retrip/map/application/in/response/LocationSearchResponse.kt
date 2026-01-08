@@ -3,8 +3,8 @@ package com.retrip.map.application.`in`.response
 import io.swagger.v3.oas.annotations.media.Schema
 import java.util.UUID
 
-@Schema(description = "장소 업데이트 Response")
-data class LocationUpdateResponse(
+@Schema(description = "장소 빠른 조회 Response")
+data class LocationSearchResponse(
     @Schema(description = "장소 id")
     val id: UUID,
     @Schema(description = "장소명")

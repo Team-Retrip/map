@@ -5,7 +5,7 @@ import jakarta.persistence.Embeddable
 
 
 @Embeddable
-class LocationAddress() {
+class LocationDetailAddress() {
     @Column(name = "address")
     var address: String? = null
 
