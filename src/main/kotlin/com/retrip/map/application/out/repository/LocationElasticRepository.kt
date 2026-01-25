@@ -10,5 +10,5 @@ import java.util.UUID
 @Repository
 interface LocationElasticRepository: ElasticsearchRepository<LocationDocument, UUID> {
     // 이름 포함 검색 + 페이징
-    fun findByNameContaining(name: String?, pageable: Pageable): Page<LocationDocument>
+    fun findBySearchTextContaining(searchText: String?, pageable: Pageable): Page<LocationDocument>
 }

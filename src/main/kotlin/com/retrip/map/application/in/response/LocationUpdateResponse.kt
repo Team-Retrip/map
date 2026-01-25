@@ -9,6 +9,8 @@ data class LocationUpdateResponse(
     val id: UUID,
     @Schema(description = "장소명")
     val name: String,
+    @Schema(description = "국가")
+    val country: String,
     @Schema(description = "장소 위도")
     val latitude: Double?,
     @Schema(description = "장소 경도")
