@@ -1,4 +1,4 @@
-name: Build & Deploy (map - deploy)
+name: Build & Push (map)
 
 on:
   push:
@@ -31,80 +31,6 @@ jobs:
       - name: Build & Push
         run: |
           REPO=${{ secrets.DOCKER_USERNAME }}/map
-          docker build -t $REPO:latest -t $REPO:latest-${{ github.sha }} .
+          docker build -t $REPO:latest -t $REPO:${{ github.sha }} .
           docker push $REPO:latest
-          docker push $REPO:latest-${{ github.sha }}
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build-and-push
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-
-      - name: Get egress IPv4
-        id: egress
-        run: |
-          IP=$(curl -s https://checkip.amazonaws.com | tr -d '\r\n')
-          echo "ip=$IP" >> "$GITHUB_OUTPUT"
-
-      - name: Allow SSH
-        id: add
-        run: |
-          CIDR="${{ steps.egress.outputs.ip }}/32"
-          echo "Authorizing SSH from $CIDR"
-          aws ec2 authorize-security-group-ingress \
-            --group-id "${{ secrets.AWS_SECURITY_GROUP_ID }}" \
-            --protocol tcp --port 22 --cidr "$CIDR" || true
-
-
-      - name: Wait for SG propagation
-        run: sleep 8
-
-      - name: Deploy map
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_PRIVATE_KEY }}
-          timeout: 120s
-          command_timeout: 15m
-          script: |
-            set -e
-
-            IMAGE=${{ secrets.DOCKER_USERNAME }}/map:latest
-            CONTAINER=map
-
-            docker pull $IMAGE
-
-            if docker ps -a --format '{{.Names}}' | grep -q "^$CONTAINER$"; then
-              docker stop $CONTAINER
-              docker rm $CONTAINER
-            fi
-
-            docker run -d --name map \
-              -p 8080:8080 \
-              -v /home/ec2-user/certs/http_ca.crt:/certs/http_ca.crt:ro \
-              -e SPRING_PROFILES_ACTIVE=prod \
-              -e DB_URL=${{ secrets.DB_URL }} \
-              -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
-              -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-              -e SERVER_PORT=8080 \
-              --restart unless-stopped \
-              $IMAGE
-
-            docker ps
-            docker logs --tail 50 map
-
-      - name: Revoke SSH
-        if: always()
-        run: |
-          CIDR="${{ steps.egress.outputs.ip }}/32"
-          echo "Revoking SSH from $CIDR"
-          aws ec2 revoke-security-group-ingress \
-            --group-id "${{ secrets.AWS_SECURITY_GROUP_ID }}" \
-            --protocol tcp --port 22 --cidr "$CIDR" || true
+          docker push $REPO:${{ github.sha }}
