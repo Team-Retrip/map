@@ -40,7 +40,7 @@ dependencies {
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    runtimeOnly("org.mariadb.jdbc:mariadb-java-client:3.3.3")
+    runtimeOnly 'com.mysql:mysql-connector-j'
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.batch:spring-batch-test")
