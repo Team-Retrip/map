@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 import java.util.UUID
 
 interface LocationDetailRepository: JpaRepository<LocationDetail, UUID> {
+    fun findByNameValueAndLocationId(name: String, locationId: UUID): LocationDetail?
 }

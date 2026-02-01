@@ -18,7 +18,7 @@ class LocationSearchService(
 
     @Transactional(readOnly = true)
     override fun getLocation(searchText: String?, page: Pageable): Page<LocationSearchResponse> {
-        val locations = locationElasticRepository.findBySearchTextContaining(searchText, page)
+        val locations = locationElasticRepository.findBySearchText(searchText, page)
         return locations.map {
             LocationSearchResponse(
                 id = it.id,
