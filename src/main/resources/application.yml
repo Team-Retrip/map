@@ -22,3 +22,9 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create
+logging:
+  level:
+    # 쿼리 실행 결과 및 기본 정보를 확인
+    org.springframework.data.elasticsearch.core: DEBUG
+    # 실제 HTTP 통신(Request/Response Body)을 상세히 확인 (가장 권장)
+    org.springframework.data.elasticsearch.client.WIRE: TRACE
