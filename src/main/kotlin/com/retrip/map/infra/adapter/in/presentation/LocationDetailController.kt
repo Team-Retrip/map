@@ -30,32 +30,35 @@ class LocationDetailController(
     private val locationDetailUseCase: LocationDetailUseCase
 ) {
 
-    @GetMapping("")
+    @GetMapping("/{locationId}")
     @Schema(description = "장소 상세 전체 조회")
     fun getLocationDetail(
+        @PathVariable locationId: UUID,
         @RequestParam(name = "locationDetailId") id: UUID?,
         @PageableDefault(size = 10, page = 0) page: Pageable
     ): ApiResponse<Page<LocationDetailResponse>> {
-        val result = locationDetailUseCase.getLocationDetail(id, page)
+        val result = locationDetailUseCase.getLocationDetail(locationId, id, page)
         return ApiResponse.ok(result)
     }
 
-    @PostMapping("")
+    @PostMapping("/{locationId}")
     @Schema(description = "장소 상세 등록")
     fun createLocationDetail(
+        @PathVariable locationId: UUID,
         @RequestBody request: LocationDetailCreateRequest
     ): ApiResponse<LocationDetailCreateResponse> {
-        val result = locationDetailUseCase.createLocationDetail(request)
+        val result = locationDetailUseCase.createLocationDetail(locationId, request)
         return ApiResponse.create(result)
     }
 
-    @PutMapping("/{locationDetailId}")
+    @PutMapping("/{locationId}/{locationDetailId}")
     @Schema(description = "장소 상세 수정")
     fun updateLocationDetail(
+        @PathVariable locationId: UUID,
         @PathVariable locationDetailId: UUID,
         @RequestBody request: LocationDetailUpdateRequest
     ): ApiResponse<LocationDetailUpdateResponse> {
-        val result = locationDetailUseCase.updateLocationDetail(locationDetailId, request)
+        val result = locationDetailUseCase.updateLocationDetail(locationId, locationDetailId, request)
         return ApiResponse.ok(result)
     }
 

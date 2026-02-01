@@ -18,12 +18,12 @@ import java.util.*
 data class LocationDocument(
     @Id
     val id: UUID,
-    @Field(type = FieldType.Text, analyzer = "korean")
+    @Field(type = FieldType.Text, analyzer = "korean", copyTo = ["searchText"])
     val name: String,
-    @Field(type = FieldType.Text, analyzer = "korean")
+    @Field(type = FieldType.Text, analyzer = "korean", copyTo = ["searchText"])
     val country: String,
     @Field(type = FieldType.Text, analyzer = "korean")
-    val searchText: String,
+    val searchText: String? = null, //검색시에만 사용
     @Field(type = FieldType.Double)
     val latitude: Double?,
     @Field(type = FieldType.Double)
@@ -39,7 +39,7 @@ data class LocationDocument(
                 location.id ?: throw LocationNotFoundException(),
                 location.name?.value ?: throw RequireException(),
                 location.country?.value ?: throw RequireException(),
-                "${location.country?.value} + ${location.name?.value}",
+                null,
                 location.geoPoint?.latitude,
                 location.geoPoint?.longitude,
                 location.createdAt?.toInstant(ZoneOffset.UTC)?.toEpochMilli(),

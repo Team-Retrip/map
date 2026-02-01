@@ -7,11 +7,11 @@ import com.retrip.map.application.`in`.response.LocationDetailResponse
 import com.retrip.map.application.`in`.response.LocationDetailUpdateResponse
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
-import java.util.UUID
+import java.util.*
 
 interface LocationDetailUseCase {
-    fun createLocationDetail(request: LocationDetailCreateRequest): LocationDetailCreateResponse
-    fun updateLocationDetail(id: UUID, request: LocationDetailUpdateRequest): LocationDetailUpdateResponse
+    fun createLocationDetail(locationId: UUID, request: LocationDetailCreateRequest): LocationDetailCreateResponse
+    fun updateLocationDetail(locationId: UUID, id: UUID, request: LocationDetailUpdateRequest): LocationDetailUpdateResponse
     fun deleteLocationDetail(locationDetailId: UUID)
-    fun getLocationDetail(id: UUID?, page: Pageable): Page<LocationDetailResponse>
+    fun getLocationDetail(locationId: UUID, id: UUID?, page: Pageable): Page<LocationDetailResponse>
 }

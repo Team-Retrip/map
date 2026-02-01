@@ -20,7 +20,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.util.UUID
+import java.util.*
 
 @Service
 @RequiredArgsConstructor
@@ -39,11 +39,10 @@ class LocationService(
 
     override fun createLocation(request: LocationCreateRequest): LocationCreateResponse {
         val isDuplicate =
-            locationRepository.findFirstByNameValueAndCountryValue(request.name, request.country)
+            locationRepository.findFirstByNameValueAndCountryValue(request.name, request.country)?.run {
+                throw LocationDuplicateException()
+            }
 
-        if(isDuplicate != null){
-            throw LocationDuplicateException()
-        }
         val location = locationRepository.save(request.to())
         locationElasticRepository.save(LocationDocument.of(location))
         return LocationCreateResponse(
@@ -57,10 +56,9 @@ class LocationService(
 
     override fun updateLocation(id: UUID, request: LocationUpdateRequest): LocationUpdateResponse {
         val isDuplicate =
-            locationRepository.findFirstByNameValueAndCountryValue(request.name, request.country)
-        if(isDuplicate != null){
-            throw LocationDuplicateException()
-        }
+            locationRepository.findFirstByNameValueAndCountryValue(request.name, request.country)?.run {
+                throw LocationDuplicateException()
+            }
 
         val location = locationRepository.findByIdOrNull(id) ?: throw LocationNotFoundException()
         locationElasticRepository.deleteById(id)

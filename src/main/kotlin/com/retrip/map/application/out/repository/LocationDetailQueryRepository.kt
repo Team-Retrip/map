@@ -5,9 +5,9 @@ import com.retrip.map.domain.entity.LocationDetail
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 
 interface LocationDetailQueryRepository {
-    fun findLocationDetails(id: UUID?, page: Pageable): Page<LocationDetailResponse>
-    fun findLocationDetailsByEditedAt( editedAt: LocalDateTime): List<LocationDetail>
+    fun findLocationDetails(locationId: UUID, id: UUID?, page: Pageable): Page<LocationDetailResponse>
+    fun findLocationDetailsByEditedAt(editedAt: LocalDateTime): List<LocationDetail>
 }

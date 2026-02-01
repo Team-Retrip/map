@@ -2,6 +2,7 @@ package com.retrip.map.infra.adapter.out.search.elasticsearch.entity
 
 import com.retrip.map.domain.entity.LocationDetail
 import com.retrip.map.domain.exception.LocationDetailNotFoundException
+import com.retrip.map.domain.exception.LocationNotFoundException
 import com.retrip.map.domain.exception.common.RequireException
 import jakarta.persistence.Id
 import org.springframework.data.elasticsearch.annotations.Document
@@ -17,11 +18,12 @@ import java.util.*
 @Setting(settingPath = "elasticsearch/settings/setting.json")
 @Mapping(mappingPath = "elasticsearch/mappings/mapping-location-detail.json")
 data class LocationDetailDocument(
-
     @Id
     val id: UUID,
-    @Field(type = FieldType.Text, analyzer = "korean")
+    @Field(type = FieldType.Text, analyzer = "korean", copyTo = ["searchText"])
     val name: String,
+    @Field(type = FieldType.Text, analyzer = "korean")
+    val searchText: String? = null, //검색시에만 사용
     @Field(type = FieldType.Keyword)
     val category: String,
     @Field(type = FieldType.Keyword)
@@ -36,6 +38,8 @@ data class LocationDetailDocument(
     val latitude: Double?,
     @Field(type = FieldType.Double)
     val longitude: Double?,
+    @Field(type = FieldType.Keyword)
+    val locationId: UUID,
     @Field(type = FieldType.Date)
     val createdAt: Long? = null,
     @Field(type = FieldType.Date)
@@ -46,6 +50,7 @@ data class LocationDetailDocument(
             return LocationDetailDocument(
                 locationDetail.id ?: throw LocationDetailNotFoundException(),
                 locationDetail.name?.value ?: throw RequireException(),
+                searchText = null,
                 locationDetail.category?.value ?: throw RequireException(),
                 locationDetail.description?.value,
                 locationDetail.telephone,
@@ -53,6 +58,7 @@ data class LocationDetailDocument(
                 locationDetail.address?.roadAddress,
                 locationDetail.geoPoint?.latitude,
                 locationDetail.geoPoint?.longitude,
+                locationDetail.location?.id ?: throw LocationNotFoundException(),
                 locationDetail.createdAt?.toInstant(ZoneOffset.UTC)?.toEpochMilli(),
                 locationDetail.editedAt?.toInstant(ZoneOffset.UTC)?.toEpochMilli()
             )

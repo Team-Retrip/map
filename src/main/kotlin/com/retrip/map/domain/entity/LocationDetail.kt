@@ -5,10 +5,16 @@ import com.retrip.map.domain.vo.LocationDetailCategory
 import com.retrip.map.domain.vo.LocationDetailDescription
 import com.retrip.map.domain.vo.LocationDetailGeoPoint
 import com.retrip.map.domain.vo.LocationDetailName
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.ForeignKey
 import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import jakarta.persistence.Version
 import lombok.AccessLevel
@@ -43,10 +49,20 @@ class LocationDetail(
     @Embedded
     var geoPoint: LocationDetailGeoPoint? = null,
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+        name = "location_id",
+        nullable = false,
+        columnDefinition = "varbinary(16)",
+        foreignKey = ForeignKey(name = "fk_location_details_to_location")
+    )
+    var location: Location? = null,
+
     @Version
     private val version: Long? = null,
 ): BaseEntity() {
     fun update(
+        location: Location,
         name: String,
         category: String,
         description: String?,
@@ -56,6 +72,7 @@ class LocationDetail(
         latitude: Double,
         longitude: Double
     ) {
+        this.location = location
         this.name = LocationDetailName(name)
         this.category = LocationDetailCategory(category)
         this.description = LocationDetailDescription(description)
@@ -66,6 +83,7 @@ class LocationDetail(
 
     companion object {
         fun create(
+            location: Location,
             name: String,
             category: String,
             description: String?,
@@ -77,6 +95,7 @@ class LocationDetail(
         ): LocationDetail {
             return LocationDetail(
                 id = UUID.randomUUID(),
+                location = location,
                 name = LocationDetailName(name),
                 category = LocationDetailCategory(category),
                 description = LocationDetailDescription(description),

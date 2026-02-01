@@ -5,11 +5,13 @@
     },
     "name": {
       "type": "text",
-      "analyzer": "korean"
+      "analyzer": "korean",
+      "copy_to": ["searchText"]
     },
     "country": {
       "type": "text",
-      "analyzer": "korean"
+      "analyzer": "korean",
+      "copy_to": ["searchText"]
     },
     "searchText": {
       "type": "text",
