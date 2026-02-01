@@ -26,11 +26,11 @@ class ElasticsearchConfig {
             .loadTrustMaterial(null) { _, _ -> true } // 개발용
             .build()
 
-        val restClient = RestClient.builder(HttpHost("localhost", 9200, "https"))
+        val restClient = RestClient.builder(HttpHost("43.203.108.129", 9200, "https"))
             .setHttpClientConfigCallback { httpClientBuilder ->
                 httpClientBuilder
                     .setSSLContext(sslContext)
-                    .setDefaultCredentialsProvider(credentialsProvider) // ✅ 여기 수정
+                    .setDefaultCredentialsProvider(credentialsProvider)
             }
             .build()
 
