@@ -2,7 +2,7 @@ plugins {
     kotlin("jvm") version "1.9.25"
     kotlin("plugin.spring") version "1.9.25"
     kotlin("kapt") version "1.9.25" // 추가
-
+    kotlin("plugin.jpa") version "1.9.25" // 현재 사용 중인 코틀린 버전에 맞게
     id("org.springframework.boot") version "3.5.6"
     id("io.spring.dependency-management") version "1.1.7"
 }
@@ -35,6 +35,10 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-api:2.8.5")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5")
     implementation("com.querydsl:querydsl-jpa:5.1.0:jakarta")
+    implementation("io.jsonwebtoken:jjwt-api:0.12.6")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
+    runtimeOnly("com.h2database:h2")
 
     kapt("com.querydsl:querydsl-apt:5.1.0:jakarta") // annotationProcessor → kapt로 변경
 

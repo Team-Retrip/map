@@ -1,24 +1,44 @@
 package com.retrip.map.application.`in`.service
 
+import com.retrip.map.application.`in`.request.LocationRecentSearchModel
+import com.retrip.map.application.`in`.request.context.UserContext
 import com.retrip.map.application.`in`.response.LocationSearchResponse
 import com.retrip.map.application.`in`.usecase.LocationSearchUseCase
 import com.retrip.map.application.out.repository.LocationElasticRepository
+import com.retrip.map.application.out.repository.LocationSearchHistoryRepository
+import com.retrip.map.domain.entity.LocationSearchHistory
 import lombok.RequiredArgsConstructor
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 class LocationSearchService(
-    val locationElasticRepository: LocationElasticRepository
+    val locationElasticRepository: LocationElasticRepository,
+    val locationSearchHistoryRepository: LocationSearchHistoryRepository,
+    val eventPublisher: ApplicationEventPublisher,
 ) : LocationSearchUseCase {
 
-    @Transactional(readOnly = true)
-    override fun getLocation(searchText: String?, page: Pageable): Page<LocationSearchResponse> {
+    @Transactional
+    override fun getLocation(searchText: String?, page: Pageable, context: UserContext): Page<LocationSearchResponse> {
         val locations = locationElasticRepository.findBySearchText(searchText, page)
+        if (!searchText.isNullOrBlank()) {
+            val memberId = context.memberId
+            val locationSearchHistory =
+                locationSearchHistoryRepository.save(LocationSearchHistory.create(searchText, memberId))
+            eventPublisher.publishEvent(
+                LocationRecentSearchModel(
+                    searchText = searchText,
+                    memberId = memberId,
+                    updateTime = locationSearchHistory.createdAt ?: LocalDateTime.now(),
+                )
+            )
+        }
         return locations.map {
             LocationSearchResponse(
                 id = it.id,
@@ -29,6 +49,5 @@ class LocationSearchService(
             )
         }
     }
-
 }
 

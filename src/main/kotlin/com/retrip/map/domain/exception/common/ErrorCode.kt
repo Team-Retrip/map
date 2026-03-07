@@ -20,4 +20,5 @@ enum class ErrorCode(
     LOCATION_DETAIL_NOT_FOUND(BAD_REQUEST, "Location-002", "로케이션 디테일 엔티티를 찾을 수 없습니다."),
     LOCATION_DUPLICATION(INTERNAL_SERVER_ERROR, "Location-003", "지역이 중복됩니다."),
     LOCATION_DETAILS_DUPLICATION(INTERNAL_SERVER_ERROR, "Location-004", "상세 지역이 중복됩니다."),
+
 }

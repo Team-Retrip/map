@@ -1,9 +1,7 @@
-package com.retrip.map.infra.adapter.`in`.presentation
+package com.retrip.map.infra.adapter.`in`.presentation.rest
 
 import com.retrip.map.application.`in`.response.LocationDetailSearchResponse
-import com.retrip.map.application.`in`.response.LocationSearchResponse
 import com.retrip.map.application.`in`.usecase.LocationDetailSearchUseCase
-import com.retrip.map.application.`in`.usecase.LocationSearchUseCase
 import com.retrip.map.infra.adapter.`in`.presentation.common.ApiResponse
 import io.swagger.v3.oas.annotations.media.Schema
 import lombok.RequiredArgsConstructor
@@ -18,7 +16,7 @@ import java.util.UUID
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/location-detail-search")
+@RequestMapping("search/location-details")
 class LocationDetailSearchController(
     private val locationDetailSearchUseCase: LocationDetailSearchUseCase
 ) {
