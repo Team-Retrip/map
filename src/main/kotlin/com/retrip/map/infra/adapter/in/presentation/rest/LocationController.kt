@@ -7,7 +7,9 @@ import com.retrip.map.application.`in`.response.LocationResponse
 import com.retrip.map.application.`in`.response.LocationUpdateResponse
 import com.retrip.map.application.`in`.usecase.LocationUseCase
 import com.retrip.map.infra.adapter.`in`.presentation.common.ApiResponse
+import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.tags.Tag
 import lombok.RequiredArgsConstructor
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -25,13 +27,14 @@ import java.util.*
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "LocationCRUD", description = "여행 지역 정보 등록,수정,삭제,조회 API 입니다.")
 @RequestMapping("/locations")
 class LocationController(
     private val locationUseCase: LocationUseCase
 ) {
 
     @GetMapping("")
-    @Schema(description = "장소 전체 조회")
+    @Operation( summary = "여행 지역 조회",description = "여행 지역 조회 API 입니다.")
     fun getLocation(
         @RequestParam(name = "locationId") id: UUID?,
         @PageableDefault(size = 10, page = 0) page: Pageable
@@ -41,7 +44,7 @@ class LocationController(
     }
 
     @PostMapping("")
-    @Schema(description = "장소 등록")
+    @Operation( summary = "여행 지역 등록",description = "여행 지역 등록 API 입니다.")
     fun createLocation(
         @RequestBody request: LocationCreateRequest
     ): ApiResponse<LocationCreateResponse> {
@@ -50,7 +53,7 @@ class LocationController(
     }
 
     @PutMapping("/{locationId}")
-    @Schema(description = "장소 수정")
+    @Operation( summary = "여행 지역 수정",description = "여행 지역 수정 API 입니다.")
     fun updateLocation(
         @PathVariable locationId: UUID,
         @RequestBody request: LocationUpdateRequest
@@ -60,13 +63,11 @@ class LocationController(
     }
 
     @DeleteMapping("/{locationId}")
-    @Schema(description = "장소 삭제")
+    @Operation( summary = "여행 지역 삭제",description = "여행 지역 삭제 API 입니다.")
     fun deleteLocation(
         @PathVariable locationId: UUID
     ): ApiResponse<Unit> {
         locationUseCase.deleteLocation(locationId)
         return ApiResponse.noContent()
     }
-
-
 }

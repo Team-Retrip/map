@@ -7,7 +7,9 @@ import com.retrip.map.application.`in`.response.LocationSearchResponse
 import com.retrip.map.application.`in`.usecase.LocationRecentSearchUseCase
 import com.retrip.map.application.`in`.usecase.LocationSearchUseCase
 import com.retrip.map.infra.adapter.`in`.presentation.common.ApiResponse
+import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.tags.Tag
 import lombok.RequiredArgsConstructor
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "Location", description = "여행 지역 정보 조회용 API 입니다.")
 @RequestMapping("search/locations")
 class LocationSearchController(
     private val locationSearchUseCase: LocationSearchUseCase,
@@ -27,7 +30,7 @@ class LocationSearchController(
 ) {
 
     @GetMapping("")
-    @Schema(description = "장소 검색 엔진 조회")
+    @Operation(summary = "여행 지역 조회", description = "여행 지역 조회(검색엔진)시, 사용하는 API 입니다.")
     fun getLocation(
         @WithUserContext context: UserContext,
         @PageableDefault(size = 10, page = 0) page: Pageable,
@@ -39,7 +42,7 @@ class LocationSearchController(
 
 
     @GetMapping("recent")
-    @Schema(description = "최근 장소 조회")
+    @Operation(summary = "최근 여행 지역 조회", description = "최근 여행 지역 조회 API 입니다.")
     fun getRecentLocation(
         @WithUserContext context: UserContext
     ): ApiResponse<LocationRecentSearchResponse?> {
@@ -48,7 +51,7 @@ class LocationSearchController(
     }
 
     @DeleteMapping("recent")
-    @Schema(description = "최근 장소 검색 제거")
+    @Operation(summary = "최근 여행 지역 조회 제거", description = "최근 여행 지역 조회 제거 API 입니다.")
     fun delectRecentLocationsByKeyword(
         @WithUserContext context: UserContext,
         @RequestParam("keyword", required = false) keyword: String?

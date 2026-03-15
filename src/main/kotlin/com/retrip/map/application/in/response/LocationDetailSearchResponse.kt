@@ -1,10 +1,9 @@
 package com.retrip.map.application.`in`.response
 
-import com.retrip.map.domain.vo.LocationCountry
 import io.swagger.v3.oas.annotations.media.Schema
 import java.util.UUID
 
-@Schema(description = "장소 빠른 조회 Response")
+@Schema(description = "장소 상세 조회 Response")
 data class LocationDetailSearchResponse(
     @Schema(description = "장소 상세 id")
     val id: UUID,
