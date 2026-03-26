@@ -4,8 +4,8 @@ spring:
 ############# Data Source ######
   datasource:
     driver-class-name: org.h2.Driver
-    #    url: jdbc:h2:mem:trip;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false;MODE=MySQL
-    url: jdbc:h2:tcp://localhost/~/map;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false;MODE=MySQL
+    #url: jdbc:h2:file:~/map;AUTO_SERVER=TRUE;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false;MODE=MySQL
+    url: jdbc:h2:tcp://localhost/~/map;AUTO_SERVER=TRUE;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false;MODE=MySQL
     username: sa
     password:
   h2:
@@ -23,7 +23,14 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create
-
+#logging:
+#  level:
+    # 1. Spring Data ES의 최상위 로그
+#    org.springframework.data.elasticsearch.client.WIRE: TRACE
+    # 2. Elasticsearch 자바 클라이언트의 저수준 Tracer (핵심!)
+#    org.elasticsearch.client.tracer: TRACE
+    # 3. Apache HttpClient를 사용 중이라면 필수 (전송 데이터 확인)
+#    org.apache.http.wire: DEBUG
 jwt:
   public-key: |
     -----BEGIN PUBLIC KEY-----

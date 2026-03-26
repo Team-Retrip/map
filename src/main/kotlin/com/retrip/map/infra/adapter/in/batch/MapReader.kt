@@ -17,7 +17,7 @@ class MapReader(
     override fun read(): List<LocationDetail>? {
         val lastUpdateDocument = locationDetailElasticRepository.findFirstByOrderByEditedAtDesc()
         val editedAt =
-            lastUpdateDocument?.editedAt?.let { LocalDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneOffset.UTC) }
+            lastUpdateDocument?.editedAt?.let { LocalDateTime.ofInstant(it, ZoneOffset.UTC) }
                 ?: LocalDateTime.now()
 
         return locationDetailQueryRepository.findLocationDetailsByEditedAt(editedAt)

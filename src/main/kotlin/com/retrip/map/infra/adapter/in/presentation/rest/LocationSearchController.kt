@@ -7,12 +7,15 @@ import com.retrip.map.application.`in`.response.LocationSearchResponse
 import com.retrip.map.application.`in`.usecase.LocationRecentSearchUseCase
 import com.retrip.map.application.`in`.usecase.LocationSearchUseCase
 import com.retrip.map.infra.adapter.`in`.presentation.common.ApiResponse
+import com.retrip.map.infra.adapter.`in`.presentation.common.PageUtils
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.tags.Tag
 import lombok.RequiredArgsConstructor
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -36,7 +39,8 @@ class LocationSearchController(
         @PageableDefault(size = 10, page = 0) page: Pageable,
         @RequestParam(name = "searchText", required = false) searchText: String?
     ): ApiResponse<Page<LocationSearchResponse>> {
-        val result = locationSearchUseCase.getLocation(searchText, page, context)
+        val safePageable = PageUtils.getSafePageable(page)
+        val result = locationSearchUseCase.getLocation(searchText, safePageable, context)
         return ApiResponse.ok(result)
     }
 

@@ -3,6 +3,7 @@ package com.retrip.map.infra.adapter.`in`.presentation.rest
 import com.retrip.map.application.`in`.response.LocationDetailSearchResponse
 import com.retrip.map.application.`in`.usecase.LocationDetailSearchUseCase
 import com.retrip.map.infra.adapter.`in`.presentation.common.ApiResponse
+import com.retrip.map.infra.adapter.`in`.presentation.common.PageUtils
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -31,7 +32,8 @@ class LocationDetailSearchController(
         @RequestParam(name = "locationId", required = false) locationId: UUID?,
         @RequestParam(name = "searchText", required = false) searchText: String?
     ): ApiResponse<Page<LocationDetailSearchResponse>> {
-        val result = locationDetailSearchUseCase.getDetailLocation(locationId, searchText, page)
+        val safePageable = PageUtils.getSafePageable(page)
+        val result = locationDetailSearchUseCase.getDetailLocation(locationId, searchText, safePageable)
         return ApiResponse.ok(result)
     }
 }

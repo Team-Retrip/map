@@ -4,8 +4,8 @@ import com.retrip.map.application.`in`.request.LocationRecentSearchModel
 import com.retrip.map.application.`in`.request.context.UserContext
 import com.retrip.map.application.`in`.response.LocationSearchResponse
 import com.retrip.map.application.`in`.usecase.LocationSearchUseCase
-import com.retrip.map.application.out.repository.LocationElasticRepository
 import com.retrip.map.application.out.repository.LocationSearchHistoryRepository
+import com.retrip.map.application.out.repository.LocationSearchQueryRepository
 import com.retrip.map.domain.entity.LocationSearchHistory
 import lombok.RequiredArgsConstructor
 import org.springframework.context.ApplicationEventPublisher
@@ -19,14 +19,14 @@ import java.time.LocalDateTime
 @RequiredArgsConstructor
 @Transactional
 class LocationSearchService(
-    val locationElasticRepository: LocationElasticRepository,
+    val locationSearchQueryRepository: LocationSearchQueryRepository,
     val locationSearchHistoryRepository: LocationSearchHistoryRepository,
     val eventPublisher: ApplicationEventPublisher,
 ) : LocationSearchUseCase {
 
     @Transactional
     override fun getLocation(searchText: String?, page: Pageable, context: UserContext): Page<LocationSearchResponse> {
-        val locations = locationElasticRepository.findBySearchText(searchText, page)
+        val locations = locationSearchQueryRepository.findBySearchText(searchText, page)
         if (!searchText.isNullOrBlank()) {
             val memberId = context.memberId
             val locationSearchHistory =

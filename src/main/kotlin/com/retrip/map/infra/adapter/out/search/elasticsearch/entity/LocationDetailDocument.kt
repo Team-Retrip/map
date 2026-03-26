@@ -10,6 +10,7 @@ import org.springframework.data.elasticsearch.annotations.Field
 import org.springframework.data.elasticsearch.annotations.FieldType
 import org.springframework.data.elasticsearch.annotations.Mapping
 import org.springframework.data.elasticsearch.annotations.Setting
+import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.*
@@ -41,9 +42,9 @@ data class LocationDetailDocument(
     @Field(type = FieldType.Keyword)
     val locationId: UUID,
     @Field(type = FieldType.Date)
-    val createdAt: Long? = null,
+    val createdAt: Instant? = null,
     @Field(type = FieldType.Date)
-    val editedAt: Long? = null,
+    val editedAt: Instant? = null,
 ) {
     companion object {
         fun of(locationDetail: LocationDetail): LocationDetailDocument {
@@ -59,8 +60,8 @@ data class LocationDetailDocument(
                 locationDetail.geoPoint?.latitude,
                 locationDetail.geoPoint?.longitude,
                 locationDetail.location?.id ?: throw LocationNotFoundException(),
-                locationDetail.createdAt?.toInstant(ZoneOffset.UTC)?.toEpochMilli(),
-                locationDetail.editedAt?.toInstant(ZoneOffset.UTC)?.toEpochMilli()
+                locationDetail.createdAt?.toInstant(ZoneOffset.UTC),
+                locationDetail.editedAt?.toInstant(ZoneOffset.UTC)
             )
         }
     }
