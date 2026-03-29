@@ -14,4 +14,5 @@ interface LocationDetailUseCase {
     fun updateLocationDetail(locationId: UUID, id: UUID, request: LocationDetailUpdateRequest): LocationDetailUpdateResponse
     fun deleteLocationDetail(locationDetailId: UUID)
     fun getLocationDetail(locationId: UUID, id: UUID?, page: Pageable): Page<LocationDetailResponse>
+    fun getLocationDetails(locationDetailIds: List<UUID>): List<LocationDetailResponse>
 }

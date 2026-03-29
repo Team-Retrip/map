@@ -23,6 +23,7 @@ object LocationDetailsQueryDocumentConvert {
             address = this.address?.firstOrNull() ?: throw IllegalArgumentException("Cannot find location query document address"),
             description = this.description?.firstOrNull() ?: throw IllegalArgumentException("Cannot find location query document description"),
             locationId =  this.locationId?.firstOrNull()?.let { UUID.fromString(it) } ?: throw IllegalArgumentException("Cannot find location query document locationId"),
+            type = this.type?.firstOrNull() ?: throw IllegalArgumentException("Cannot find location query document type"),
         )
 
     }

@@ -1,14 +1,20 @@
 package com.retrip.map.domain.entity
 
+import com.retrip.map.application.`in`.request.LocationDetailCreateRequest
 import com.retrip.map.domain.vo.LocationDetailAddress
 import com.retrip.map.domain.vo.LocationDetailCategory
 import com.retrip.map.domain.vo.LocationDetailDescription
 import com.retrip.map.domain.vo.LocationDetailGeoPoint
 import com.retrip.map.domain.vo.LocationDetailName
+import com.retrip.map.domain.vo.LocationDetailType
+import com.retrip.map.domain.vo.LocationName
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
+import jakarta.persistence.Embeddable
 import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.FetchType
 import jakarta.persistence.ForeignKey
 import jakarta.persistence.Id
@@ -49,6 +55,10 @@ class LocationDetail(
     @Embedded
     var geoPoint: LocationDetailGeoPoint? = null,
 
+    @Embedded()
+    @Enumerated(EnumType.ORDINAL)
+    var type: LocationDetailType? = null,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
         name = "location_id",
@@ -70,7 +80,8 @@ class LocationDetail(
         address: String?,
         roadAddress: String?,
         latitude: Double,
-        longitude: Double
+        longitude: Double,
+        type: LocationDetailType
     ) {
         this.location = location
         this.name = LocationDetailName(name)
@@ -79,6 +90,7 @@ class LocationDetail(
         this.telephone = telephone
         this.address = LocationDetailAddress(address, roadAddress)
         this.geoPoint = LocationDetailGeoPoint(latitude, longitude)
+        this.type = type
     }
 
     companion object {
@@ -91,7 +103,8 @@ class LocationDetail(
             address: String?,
             roadAddress: String?,
             latitude: Double,
-            longitude: Double
+            longitude: Double,
+            type: LocationDetailType
         ): LocationDetail {
             return LocationDetail(
                 id = UUID.randomUUID(),
@@ -101,7 +114,8 @@ class LocationDetail(
                 description = LocationDetailDescription(description),
                 telephone = telephone,
                 address = LocationDetailAddress(address, roadAddress),
-                geoPoint = LocationDetailGeoPoint(latitude, longitude)
+                geoPoint = LocationDetailGeoPoint(latitude, longitude),
+                type = type
             )
         }
     }

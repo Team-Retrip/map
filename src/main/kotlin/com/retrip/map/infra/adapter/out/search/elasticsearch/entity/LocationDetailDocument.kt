@@ -40,6 +40,8 @@ data class LocationDetailDocument(
     @Field(type = FieldType.Double)
     val longitude: Double?,
     @Field(type = FieldType.Keyword)
+    val type: String?,
+    @Field(type = FieldType.Keyword)
     val locationId: UUID,
     @Field(type = FieldType.Date)
     val createdAt: Instant? = null,
@@ -59,6 +61,7 @@ data class LocationDetailDocument(
                 locationDetail.address?.roadAddress,
                 locationDetail.geoPoint?.latitude,
                 locationDetail.geoPoint?.longitude,
+                locationDetail.type?.name,
                 locationDetail.location?.id ?: throw LocationNotFoundException(),
                 locationDetail.createdAt?.toInstant(ZoneOffset.UTC),
                 locationDetail.editedAt?.toInstant(ZoneOffset.UTC)

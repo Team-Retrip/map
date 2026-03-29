@@ -14,8 +14,10 @@ import com.retrip.map.domain.exception.LocationDetailDuplicateException
 import com.retrip.map.domain.exception.LocationDetailNotFoundException
 import com.retrip.map.domain.exception.LocationNotFoundException
 import com.retrip.map.domain.exception.common.RequireException
+import com.retrip.map.domain.vo.LocationDetailType
 import com.retrip.map.infra.adapter.out.search.elasticsearch.entity.LocationDetailDocument
 import lombok.RequiredArgsConstructor
+import org.hibernate.query.Page.page
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.AbstractPersistable_.id
@@ -36,7 +38,12 @@ class LocationDetailService(
 
     @Transactional(readOnly = true)
     override fun getLocationDetail(locationId: UUID, id: UUID?, page: Pageable): Page<LocationDetailResponse> {
-        return locationDetailQueryRepository.findLocationDetails(locationId, id, page)
+        return locationDetailQueryRepository.findLocationDetailsByPage(locationId, id, page)
+    }
+
+    @Transactional(readOnly = true)
+    override fun getLocationDetails(locationDetailIds: List<UUID>): List<LocationDetailResponse> {
+        return locationDetailQueryRepository.findLocationDetails(locationDetailIds)
     }
 
     override fun createLocationDetail(locationId: UUID, request: LocationDetailCreateRequest): LocationDetailCreateResponse {
@@ -57,6 +64,7 @@ class LocationDetailService(
             locationDetail.address?.roadAddress,
             locationDetail.geoPoint?.latitude,
             locationDetail.geoPoint?.longitude,
+            locationDetail.type?.name
         )
     }
 
@@ -76,6 +84,7 @@ class LocationDetailService(
             request.roadAddress,
             request.latitude,
             request.longitude,
+            LocationDetailType.entries.firstOrNull { it.name == request.type.name } ?: LocationDetailType.UNKNOWN
         )
         locationDetailElasticRepository.deleteById(id)
         locationDetailElasticRepository.save(LocationDetailDocument.of(locationDetails))
@@ -89,6 +98,7 @@ class LocationDetailService(
             locationDetails.address?.roadAddress,
             locationDetails.geoPoint?.latitude,
             locationDetails.geoPoint?.longitude,
+            locationDetails.type?.name
         )
     }
 

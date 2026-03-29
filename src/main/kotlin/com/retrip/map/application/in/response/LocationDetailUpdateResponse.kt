@@ -23,5 +23,8 @@ data class LocationDetailUpdateResponse(
     val latitude: Double?,
     @Schema(description = "장소 상세 경도")
     val longitude: Double?,
+    @Schema(description = "여행 상세 타입")
+    val type: String?,
 ) {
+
 }

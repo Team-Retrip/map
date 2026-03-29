@@ -33,6 +33,7 @@ class LocationDetailSearchService(
                 roadAddress = it.roadAddress,
                 latitude = it.latitude,
                 longitude = it.longitude,
+                type = it.type,
             )
         }
     }

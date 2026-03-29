@@ -43,6 +43,7 @@ class LocationDetailsSearchElasticQueryRepository(
                 "latitude",
                 "longitude",
                 "locationId",
+                "type",
                 "createdAt",
                 "editedAt",
             )

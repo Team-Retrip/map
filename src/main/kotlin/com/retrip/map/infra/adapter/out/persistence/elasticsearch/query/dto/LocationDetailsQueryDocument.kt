@@ -14,6 +14,7 @@ data class LocationDetailsQueryDocument(
     val latitude: List<Double>? = emptyList(),
     val longitude: List<Double>? = emptyList(),
     val locationId: List<String>? = emptyList(),
+    val type: List<String>? = emptyList(),
     val createdAt: List<Instant>? = emptyList(),
     val editedAt: List<Instant>? = emptyList(),
 )

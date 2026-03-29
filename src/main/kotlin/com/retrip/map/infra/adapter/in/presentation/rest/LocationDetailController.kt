@@ -11,8 +11,10 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.tags.Tag
 import lombok.RequiredArgsConstructor
+import org.hibernate.query.Page.page
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.domain.AbstractPersistable_.id
 import org.springframework.data.web.PageableDefault
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -34,13 +36,22 @@ class LocationDetailController(
 ) {
 
     @GetMapping("/{locationId}")
-    @Operation(description = "장소 상세 전체 조회", summary = "장소 상세 전체 조회 API 입니다.")
+    @Operation(description = "장소 상세 전체 조회(페이징)", summary = "장소 상세 전체 조회 API 입니다.")
     fun getLocationDetail(
         @PathVariable locationId: UUID,
         @RequestParam(name = "locationDetailId") id: UUID?,
         @PageableDefault(size = 10, page = 0) page: Pageable
     ): ApiResponse<Page<LocationDetailResponse>> {
         val result = locationDetailUseCase.getLocationDetail(locationId, id, page)
+        return ApiResponse.ok(result)
+    }
+
+    @GetMapping("/")
+    @Operation(description = "장소 상세 전체 조회", summary = "장소 상세 전체 조회 API 입니다.")
+    fun getLocationDetails(
+        @RequestParam(name = "locationDetailIds") locationDetailIds: List<UUID>,
+    ): ApiResponse<List<LocationDetailResponse>> {
+        val result = locationDetailUseCase.getLocationDetails(locationDetailIds)
         return ApiResponse.ok(result)
     }
 

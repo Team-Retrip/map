@@ -8,6 +8,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 interface LocationDetailQueryRepository {
-    fun findLocationDetails(locationId: UUID, id: UUID?, page: Pageable): Page<LocationDetailResponse>
+    fun findLocationDetailsByPage(locationId: UUID, id: UUID?, page: Pageable): Page<LocationDetailResponse>
+    fun findLocationDetails(locationDetailIds: List<UUID>): List<LocationDetailResponse>
     fun findLocationDetailsByEditedAt(editedAt: LocalDateTime): List<LocationDetail>
 }

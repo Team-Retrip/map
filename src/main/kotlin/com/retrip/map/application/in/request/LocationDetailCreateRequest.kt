@@ -2,8 +2,8 @@ package com.retrip.map.application.`in`.request
 
 import com.retrip.map.domain.entity.Location
 import com.retrip.map.domain.entity.LocationDetail
+import com.retrip.map.domain.vo.LocationDetailType
 import io.swagger.v3.oas.annotations.media.Schema
-import java.util.UUID
 
 @Schema(description = "장소 상세 생성 Request")
 data class LocationDetailCreateRequest(
@@ -15,7 +15,24 @@ data class LocationDetailCreateRequest(
     val roadAddress: String?,
     val latitude: Double,
     val longitude: Double,
+    val type: Type
 ) {
+
+    enum class Type {
+        RESTAURANT,
+        CAFE,
+        SHOPPING,
+        LEISURE,
+        LANDMARK,
+        PARK,
+        ZOO,
+        SEA,
+        TRANSPORT,
+        ACCOMMODATION,
+        FLIGHT,
+        ETC
+    }
+
     fun to(location: Location): LocationDetail {
         return LocationDetail.create(
             location,
@@ -26,7 +43,8 @@ data class LocationDetailCreateRequest(
             address,
             roadAddress,
             latitude,
-            longitude
+            longitude,
+            LocationDetailType.entries.firstOrNull { it.name == type.name } ?: LocationDetailType.UNKNOWN
         )
     }
 }

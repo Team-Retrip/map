@@ -12,5 +12,20 @@ data class LocationDetailUpdateRequest(
     val roadAddress: String?,
     val latitude: Double,
     val longitude: Double,
+    val type: Type
 ) {
+    enum class Type {
+        RESTAURANT,
+        CAFE,
+        SHOPPING,
+        LEISURE,
+        LANDMARK,
+        PARK,
+        ZOO,
+        SEA,
+        TRANSPORT,
+        ACCOMMODATION,
+        FLIGHT,
+        ETC
+    }
 }
