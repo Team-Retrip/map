@@ -8,7 +8,7 @@ import java.util.UUID
 @Schema(description = "장소 상세 생성 Request")
 data class LocationDetailCreateRequest(
     val name: String,
-    val category: String,
+    val category: CreateLocationDetailType,
     val description: String?,
     val telephone: String?,
     val address: String?,
@@ -16,11 +16,25 @@ data class LocationDetailCreateRequest(
     val latitude: Double,
     val longitude: Double,
 ) {
+    enum class CreateLocationDetailType {
+        RESTAURANT,
+        CAFE,
+        SHOPPING,
+        LEISURE,
+        LANDMARK,
+        PARK,
+        ZOO,
+        SEA,
+        TRANSPORT,
+        ACCOMMODATION,
+        FLIGHT,
+        ETC
+    }
     fun to(location: Location): LocationDetail {
         return LocationDetail.create(
             location,
             name,
-            category,
+            category.name,
             description,
             telephone,
             address,

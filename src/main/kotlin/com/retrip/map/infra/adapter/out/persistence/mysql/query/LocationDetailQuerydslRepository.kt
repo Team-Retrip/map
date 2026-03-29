@@ -6,12 +6,10 @@ import com.querydsl.jpa.impl.JPAQueryFactory
 import com.retrip.map.application.`in`.response.LocationDetailResponse
 import com.retrip.map.application.out.repository.LocationDetailQueryRepository
 import com.retrip.map.domain.entity.LocationDetail
-import com.retrip.map.domain.entity.QLocation.location
 import com.retrip.map.domain.entity.QLocationDetail.locationDetail
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
-import org.springframework.data.jpa.domain.AbstractPersistable_.id
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 import java.util.*
@@ -60,6 +58,28 @@ class LocationDetailQuerydslRepository(
             .where(
                 locationDetail.editedAt.gt(editedAt)
             ).fetch()
+    }
+
+    override fun findLocationDetailsByLocationDetailIds(locationDetailIds: List<UUID>): List<LocationDetailResponse> {
+        return query.select(
+            Projections.constructor(
+                LocationDetailResponse::class.java,
+                locationDetail.id,
+                locationDetail.name.value,
+                locationDetail.category.value,
+                locationDetail.description.value,
+                locationDetail.telephone,
+                locationDetail.address.address,
+                locationDetail.address.roadAddress,
+                locationDetail.geoPoint.latitude,
+                locationDetail.geoPoint.longitude
+            )
+        ).from(locationDetail)
+            .where(
+                locationDetail.id.`in`(locationDetailIds)
+            )
+            .orderBy(locationDetail.createdAt.desc())
+            .fetch()
     }
 
     private fun eqLocation(locationId: UUID?): Predicate? {

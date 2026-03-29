@@ -5,7 +5,6 @@ import com.retrip.map.application.`in`.usecase.LocationDetailSearchUseCase
 import com.retrip.map.infra.adapter.`in`.presentation.common.ApiResponse
 import com.retrip.map.infra.adapter.`in`.presentation.common.PageUtils
 import io.swagger.v3.oas.annotations.Operation
-import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.tags.Tag
 import lombok.RequiredArgsConstructor
 import org.springframework.data.domain.Page

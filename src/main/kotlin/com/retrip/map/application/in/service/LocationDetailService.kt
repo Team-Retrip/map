@@ -39,6 +39,11 @@ class LocationDetailService(
         return locationDetailQueryRepository.findLocationDetails(locationId, id, page)
     }
 
+    @Transactional(readOnly = true)
+    override fun getLocationDetailByLocationIds(locationDetailIds: List<UUID>): List<LocationDetailResponse> {
+        return locationDetailQueryRepository.findLocationDetailsByLocationDetailIds(locationDetailIds)
+    }
+
     override fun createLocationDetail(locationId: UUID, request: LocationDetailCreateRequest): LocationDetailCreateResponse {
         val location = locationRepository.findByIdOrNull(locationId) ?: throw LocationNotFoundException()
         val isDuplicate =
@@ -69,7 +74,7 @@ class LocationDetailService(
         locationDetails.update(
             location,
             request.name,
-            request.category,
+            request.category.name,
             request.description,
             request.telephone,
             request.address,

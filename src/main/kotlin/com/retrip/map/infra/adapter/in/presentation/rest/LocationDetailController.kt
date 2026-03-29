@@ -34,13 +34,22 @@ class LocationDetailController(
 ) {
 
     @GetMapping("/{locationId}")
-    @Operation(description = "장소 상세 전체 조회", summary = "장소 상세 전체 조회 API 입니다.")
+    @Operation(description = "장소 상세 전체 조회(페이징)", summary = "장소 상세 전체 조회 API 입니다.")
     fun getLocationDetail(
         @PathVariable locationId: UUID,
         @RequestParam(name = "locationDetailId") id: UUID?,
         @PageableDefault(size = 10, page = 0) page: Pageable
     ): ApiResponse<Page<LocationDetailResponse>> {
         val result = locationDetailUseCase.getLocationDetail(locationId, id, page)
+        return ApiResponse.ok(result)
+    }
+
+    @GetMapping("")
+    @Operation(description = "장소 상세 전체 조회(LocationId 조회)", summary = "장소 상세 조회 API 입니다.")
+    fun getLocationDetailByLocationIds(
+        @RequestParam(name = "locationDetailIds") locationDetailIds: List<UUID>,
+    ): ApiResponse<List<LocationDetailResponse>> {
+        val result = locationDetailUseCase.getLocationDetailByLocationIds(locationDetailIds)
         return ApiResponse.ok(result)
     }
 

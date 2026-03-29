@@ -10,4 +10,5 @@ import java.util.*
 interface LocationDetailQueryRepository {
     fun findLocationDetails(locationId: UUID, id: UUID?, page: Pageable): Page<LocationDetailResponse>
     fun findLocationDetailsByEditedAt(editedAt: LocalDateTime): List<LocationDetail>
+    fun findLocationDetailsByLocationDetailIds(locationDetailIds: List<UUID>): List<LocationDetailResponse>
 }
