@@ -30,6 +30,6 @@ interface LocationRecentSearchRepository : JpaRepository<LocationRecentSearch, U
        DELETE FROM LocationRecentSearch r WHERE r.memberId = :memberId AND r.lastSearchedAt < :threshold 
     """
     )
-    fun deleteOlderThan(memberId: UUID, it: LocalDateTime)
+    fun deleteOlderThan(memberId: UUID, threshold: LocalDateTime)
 
 }

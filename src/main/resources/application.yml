@@ -5,7 +5,7 @@ spring:
   datasource:
     driver-class-name: org.h2.Driver
     #url: jdbc:h2:file:~/map;AUTO_SERVER=TRUE;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false;MODE=MySQL
-    url: jdbc:h2:tcp://localhost/~/map;AUTO_SERVER=TRUE;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false;MODE=MySQL
+    url: jdbc:h2:tcp://localhost/~/Desktop/db/map;AUTO_SERVER=TRUE;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false;MODE=MySQL
     username: sa
     password:
   h2:
