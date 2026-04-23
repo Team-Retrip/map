@@ -15,7 +15,8 @@
     },
     "searchText": {
       "type": "text",
-      "analyzer": "korean"
+      "analyzer": "korean_ngram",
+      "search_analyzer": "korean_ngram"
     },
     "latitude": {
       "type": "double"
