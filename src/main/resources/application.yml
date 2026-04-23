@@ -41,3 +41,9 @@ jwt:
     u59J3+ToLRrIqIszRZqmasrWTL2/ihPO76PSTIMAsJMScjAwjUXA47YOOy6Vkzy8r3bPTYHp5C1N
     KucWwwIDAQAB
     -----END PUBLIC KEY-----
+#logging:
+#  level:
+    #tracer: TRACE
+    #org.springframework.data.elasticsearch.client.WIRE: TRACE
+    #org.elasticsearch.client.RestClient: TRACE
+    #org.springframework.data.elasticsearch.core: DEBUG

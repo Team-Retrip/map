@@ -10,7 +10,8 @@
     },
     "searchText": {
       "type": "text",
-      "analyzer": "korean"
+      "analyzer": "korean_ngram",
+      "search_analyzer": "korean_ngram"
     },
     "category": {
       "type": "keyword"
@@ -25,6 +26,9 @@
       "type": "keyword"
     },
     "roadAddress": {
+      "type": "keyword"
+    },
+    "locationId": {
       "type": "keyword"
     },
     "latitude": {
