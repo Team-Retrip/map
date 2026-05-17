@@ -6,7 +6,6 @@ import com.retrip.map.application.`in`.response.LocationDetailSearchResponse
 import com.retrip.map.application.`in`.usecase.LocationDetailRecentSearchUseCase
 import com.retrip.map.application.`in`.usecase.LocationDetailSearchUseCase
 import com.retrip.map.application.out.repository.LocationDetailSearchQueryRepository
-import lombok.RequiredArgsConstructor
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -15,7 +14,6 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 class LocationDetailSearchService(
     private val locationDetailSearchQueryRepository: LocationDetailSearchQueryRepository,
@@ -24,7 +22,7 @@ class LocationDetailSearchService(
 
     override fun getDetailLocation(locationId: UUID?, searchText: String?, page: Pageable, context: UserContext): Page<LocationDetailSearchResponse> {
         val locationDetails = locationDetailSearchQueryRepository.findByLocationIdAndSearchText(locationId, searchText, page)
-        if (!searchText.isNullOrBlank()) {
+        if (!searchText.isNullOrBlank() && context.memberId != null) {
             locationDetailRecentSearchUseCase.addLocationDetailRecentSearch(
                 LocationDetailRecentSearchModel(
                     searchText = searchText,

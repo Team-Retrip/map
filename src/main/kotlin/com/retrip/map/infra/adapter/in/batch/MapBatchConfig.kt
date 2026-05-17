@@ -1,50 +1,50 @@
 package com.retrip.map.infra.adapter.`in`.batch
 
-import com.retrip.map.domain.entity.LocationDetail
-import com.retrip.map.infra.adapter.out.search.elasticsearch.entity.LocationDetailDocument
 import org.springframework.batch.core.Job
 import org.springframework.batch.core.Step
 import org.springframework.batch.core.job.builder.JobBuilder
 import org.springframework.batch.core.launch.support.RunIdIncrementer
 import org.springframework.batch.core.repository.JobRepository
 import org.springframework.batch.core.step.builder.StepBuilder
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.transaction.PlatformTransactionManager
 
 @Configuration
-//@EnableBatchProcessing
 class MapBatchConfig(
-    @Value("\${spring.batch.job.name}")
-    private val jobName: String,
-    private val reader: MapReader,
-    private val processor: MapProcessor,
-    private val writer: MapWriter,
+    private val locationDetailSyncTasklet: LocationDetailSyncTasklet,
+    private val locationSyncTasklet: LocationSyncTasklet,
 ) {
 
     @Bean
-    fun mapJob(
-        jobRepository: JobRepository,
-        mapStep: Step
-    ): Job {
-        return JobBuilder(jobName, jobRepository)
-            .start(mapStep)
-            .incrementer(RunIdIncrementer())  // 🔥 이 라인 추가
+    fun locationDetailSyncJob(jobRepository: JobRepository, locationDetailSyncStep: Step): Job =
+        JobBuilder("location-detail-sync-job", jobRepository)
+            .incrementer(RunIdIncrementer())
+            .start(locationDetailSyncStep)
             .build()
-
-    }
 
     @Bean
-    fun mapStep(
+    fun locationDetailSyncStep(
         jobRepository: JobRepository,
-        transactionManager: PlatformTransactionManager
-    ): Step {
-        return StepBuilder("detail-location-step", jobRepository)
-            .chunk<List<LocationDetail>, List<LocationDetailDocument>>(10, transactionManager)
-            .reader(reader)
-            .processor(processor)
-            .writer(writer)
+        transactionManager: PlatformTransactionManager,
+    ): Step =
+        StepBuilder("location-detail-sync-step", jobRepository)
+            .tasklet(locationDetailSyncTasklet, transactionManager)
             .build()
-    }
+
+    @Bean
+    fun locationSyncJob(jobRepository: JobRepository, locationSyncStep: Step): Job =
+        JobBuilder("location-sync-job", jobRepository)
+            .incrementer(RunIdIncrementer())
+            .start(locationSyncStep)
+            .build()
+
+    @Bean
+    fun locationSyncStep(
+        jobRepository: JobRepository,
+        transactionManager: PlatformTransactionManager,
+    ): Step =
+        StepBuilder("location-sync-step", jobRepository)
+            .tasklet(locationSyncTasklet, transactionManager)
+            .build()
 }

@@ -10,7 +10,6 @@ import com.retrip.map.infra.adapter.`in`.presentation.common.ApiResponse
 import com.retrip.map.infra.adapter.`in`.presentation.common.PageUtils
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
-import lombok.RequiredArgsConstructor
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("search/location-details")
 @Tag(name = "LocationDetail", description = "여행 상세 지역 정보 조회용 API 입니다.")
 class LocationDetailSearchController(
@@ -47,7 +45,7 @@ class LocationDetailSearchController(
     @Operation(summary = "최근 여행 상세 지역 조회", description = "최근 여행 상세 지역 조회 API 입니다.")
     fun getRecentLocationDetail(
         @WithUserContext context: UserContext
-    ): ApiResponse<LocationDetailRecentSearchResponse?> {
+    ): ApiResponse<LocationDetailRecentSearchResponse> {
         val result = locationDetailRecentSearchUseCase.getRecentLocationDetail(context)
         return ApiResponse.ok(result)
     }
@@ -57,7 +55,7 @@ class LocationDetailSearchController(
     fun deleteRecentLocationDetailsByKeyword(
         @WithUserContext context: UserContext,
         @RequestParam("keyword", required = false) keyword: String?
-    ): ApiResponse<LocationDetailRecentSearchResponse?> {
+    ): ApiResponse<LocationDetailRecentSearchResponse> {
         locationDetailRecentSearchUseCase.deleteRecentLocationDetailsByKeyword(context, keyword)
         return ApiResponse.noContent()
     }

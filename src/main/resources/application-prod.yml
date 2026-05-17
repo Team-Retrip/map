@@ -9,3 +9,8 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: update
+
+elasticsearch:
+  host: 172.31.60.74
+  port: 9200
+  scheme: https

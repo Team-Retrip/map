@@ -6,7 +6,6 @@ import com.retrip.map.application.`in`.response.LocationDetailRecentSearchRespon
 import com.retrip.map.application.`in`.usecase.LocationDetailRecentSearchUseCase
 import com.retrip.map.application.out.repository.LocationDetailRecentSearchRepository
 import com.retrip.map.domain.entity.LocationDetailRecentSearch
-import lombok.RequiredArgsConstructor
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
@@ -14,20 +13,18 @@ import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-@RequiredArgsConstructor
 class LocationDetailRecentSearchService(
     private val locationDetailRecentSearchRepository: LocationDetailRecentSearchRepository
 ) : LocationDetailRecentSearchUseCase {
 
     @Transactional(readOnly = true)
-    override fun getRecentLocationDetail(context: UserContext): LocationDetailRecentSearchResponse? {
+    override fun getRecentLocationDetail(context: UserContext): LocationDetailRecentSearchResponse {
+        val memberId = context.memberId ?: return LocationDetailRecentSearchResponse()
         val pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "lastSearchedAt"))
-        val result = locationDetailRecentSearchRepository.findByMemberId(context.memberId, pageRequest)
-        return result?.let {
-            LocationDetailRecentSearchResponse(
-                it.map { recentSearch -> recentSearch.keyword }
-            )
-        }
+        val result = locationDetailRecentSearchRepository.findByMemberId(memberId, pageRequest)
+        return LocationDetailRecentSearchResponse(
+            result?.map { it.keyword } ?: emptyList()
+        )
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -60,13 +57,14 @@ class LocationDetailRecentSearchService(
 
     @Transactional
     override fun deleteRecentLocationDetailsByKeyword(context: UserContext, keyword: String?) {
+        val memberId = context.memberId ?: return
         if (keyword != null) {
-            val recentSearch = locationDetailRecentSearchRepository.findByMemberIdAndKeyword(context.memberId, keyword)
+            val recentSearch = locationDetailRecentSearchRepository.findByMemberIdAndKeyword(memberId, keyword)
             recentSearch?.run {
                 locationDetailRecentSearchRepository.delete(this)
             }
         } else {
-            val recentSearches = locationDetailRecentSearchRepository.findByMemberId(context.memberId)
+            val recentSearches = locationDetailRecentSearchRepository.findByMemberId(memberId)
             recentSearches?.run {
                 locationDetailRecentSearchRepository.deleteAllInBatch(this)
             }

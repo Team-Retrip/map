@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./gradlew compileKotlin)",
+      "Bash(./gradlew compileKotlin --stacktrace)",
+      "Bash(java -version)",
+      "Bash(./gradlew --version)",
+      "Bash(xargs ls -la)",
+      "Bash(xargs cat)"
+    ]
+  }
+}
