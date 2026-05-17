@@ -22,7 +22,7 @@ class LocationDetailSearchService(
 
     override fun getDetailLocation(locationId: UUID?, searchText: String?, page: Pageable, context: UserContext): Page<LocationDetailSearchResponse> {
         val locationDetails = locationDetailSearchQueryRepository.findByLocationIdAndSearchText(locationId, searchText, page)
-        if (!searchText.isNullOrBlank()) {
+        if (!searchText.isNullOrBlank() && context.memberId != null) {
             locationDetailRecentSearchUseCase.addLocationDetailRecentSearch(
                 LocationDetailRecentSearchModel(
                     searchText = searchText,

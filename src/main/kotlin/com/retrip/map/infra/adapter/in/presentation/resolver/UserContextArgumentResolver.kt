@@ -17,8 +17,8 @@ class UserContextArgumentResolver: HandlerMethodArgumentResolver {
     }
 
     override fun resolveArgument(parameter: MethodParameter, mavContainer: ModelAndViewContainer?, webRequest: NativeWebRequest, binderFactory: WebDataBinderFactory?): UserContext {
-        val userContext = webRequest.getAttribute("userContext", RequestAttributes.SCOPE_REQUEST) as UserContext
-        return userContext
+        return webRequest.getAttribute("userContext", RequestAttributes.SCOPE_REQUEST) as? UserContext
+            ?: UserContext(memberId = null)
     }
 
 }

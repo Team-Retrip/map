@@ -31,7 +31,8 @@ class AuthenticationFilter : OncePerRequestFilter() {
                     path.contains("h2-console") ||
                     path.contains("status-check") ||
                     path.startsWith("/locations") || // 장소 등록 ADMIN
-                    path.startsWith("/location-details") // 장소 상세 등록 ADMIN
+                    path.startsWith("/location-details") || // 장소 상세 등록 ADMIN
+                    (path.startsWith("/search/") && !path.contains("recent")) // 검색 API (최근 검색 제외)
                 -> {
                 filterChain.doFilter(request, response)
                 return

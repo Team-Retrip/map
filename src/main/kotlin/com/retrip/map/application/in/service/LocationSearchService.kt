@@ -25,7 +25,7 @@ class LocationSearchService(
     @Transactional
     override fun getLocation(searchText: String?, page: Pageable, context: UserContext): Page<LocationSearchResponse> {
         val locations = locationSearchQueryRepository.findBySearchText(searchText, page)
-        if (!searchText.isNullOrBlank()) {
+        if (!searchText.isNullOrBlank() && context.memberId != null) {
             val memberId = context.memberId
             val locationSearchHistory =
                 locationSearchHistoryRepository.save(LocationSearchHistory.create(searchText, memberId))

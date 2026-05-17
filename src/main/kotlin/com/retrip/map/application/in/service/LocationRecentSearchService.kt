@@ -18,8 +18,9 @@ class LocationRecentSearchService(
 
     @Transactional(readOnly = true)
     override fun getRecentLocation(context: UserContext): LocationRecentSearchResponse {
+        val memberId = context.memberId ?: return LocationRecentSearchResponse()
         val pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "lastSearchedAt"))
-        val result = locationRecentSearchRepository.findByMemberId(context.memberId, pageRequest)
+        val result = locationRecentSearchRepository.findByMemberId(memberId, pageRequest)
         return LocationRecentSearchResponse(
             result?.map { it.keyword } ?: emptyList()
         )
@@ -59,14 +60,14 @@ class LocationRecentSearchService(
 
     @Transactional
     override fun deleteRecentLocationsByKeyword(context: UserContext, keyword: String?) {
+        val memberId = context.memberId ?: return
         if (keyword != null) {
-            val recentSearchKeyword =
-                locationRecentSearchRepository.findByMemberIdAndKeyword(context.memberId, keyword)
+            val recentSearchKeyword = locationRecentSearchRepository.findByMemberIdAndKeyword(memberId, keyword)
             recentSearchKeyword?.run {
                 locationRecentSearchRepository.delete(this)
             }
         } else {
-            val recentSearchKeywords = locationRecentSearchRepository.findByMemberId(context.memberId)
+            val recentSearchKeywords = locationRecentSearchRepository.findByMemberId(memberId)
             recentSearchKeywords?.run {
                 locationRecentSearchRepository.deleteAllInBatch(this)
             }
