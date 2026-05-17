@@ -6,15 +6,12 @@ import com.retrip.map.application.`in`.response.LocationCreateResponse
 import com.retrip.map.application.`in`.response.LocationResponse
 import com.retrip.map.application.`in`.response.LocationUpdateResponse
 import com.retrip.map.application.`in`.usecase.LocationUseCase
-import com.retrip.map.application.out.repository.LocationElasticRepository
 import com.retrip.map.application.out.repository.LocationQueryRepository
 import com.retrip.map.application.out.repository.LocationRepository
 import com.retrip.map.domain.exception.LocationDetailNotFoundException
 import com.retrip.map.domain.exception.LocationDuplicateException
 import com.retrip.map.domain.exception.LocationNotFoundException
 import com.retrip.map.domain.exception.common.RequireException
-import com.retrip.map.infra.adapter.out.search.elasticsearch.entity.LocationDocument
-import lombok.RequiredArgsConstructor
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
@@ -23,12 +20,10 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 class LocationService(
     val locationRepository: LocationRepository,
-    val locationElasticRepository: LocationElasticRepository,
-    val locationQueryRepository: LocationQueryRepository
+    val locationQueryRepository: LocationQueryRepository,
 ) : LocationUseCase {
 
     @Transactional(readOnly = true)
@@ -38,13 +33,10 @@ class LocationService(
 
 
     override fun createLocation(request: LocationCreateRequest): LocationCreateResponse {
-        val isDuplicate =
-            locationRepository.findFirstByNameValueAndCountryValue(request.name, request.country)?.run {
-                throw LocationDuplicateException()
-            }
+        locationRepository.findFirstByNameValueAndCountryValue(request.name, request.country)
+            ?.run { throw LocationDuplicateException() }
 
         val location = locationRepository.save(request.to())
-        locationElasticRepository.save(LocationDocument.of(location))
         return LocationCreateResponse(
             location.id ?: throw LocationNotFoundException(),
             location.name?.value ?: throw RequireException(),
@@ -55,20 +47,16 @@ class LocationService(
     }
 
     override fun updateLocation(id: UUID, request: LocationUpdateRequest): LocationUpdateResponse {
-        val isDuplicate =
-            locationRepository.findFirstByNameValueAndCountryValue(request.name, request.country)?.run {
-                throw LocationDuplicateException()
-            }
+        locationRepository.findFirstByNameValueAndCountryValue(request.name, request.country)
+            ?.run { throw LocationDuplicateException() }
 
         val location = locationRepository.findByIdOrNull(id) ?: throw LocationNotFoundException()
-        locationElasticRepository.deleteById(id)
         location.update(
             request.name,
             request.country,
             request.latitude,
             request.longitude,
         )
-        locationElasticRepository.save(LocationDocument.of(location))
         return LocationUpdateResponse(
             location.id ?: throw LocationDetailNotFoundException(),
             location.name?.value ?: throw RequireException(),
@@ -80,7 +68,6 @@ class LocationService(
 
     override fun deleteLocation(locationId: UUID) {
         locationRepository.deleteById(locationId)
-        locationElasticRepository.deleteById(locationId)
     }
 }
 

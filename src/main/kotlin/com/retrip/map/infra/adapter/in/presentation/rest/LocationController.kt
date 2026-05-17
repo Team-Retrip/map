@@ -10,7 +10,6 @@ import com.retrip.map.infra.adapter.`in`.presentation.common.ApiResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.tags.Tag
-import lombok.RequiredArgsConstructor
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
@@ -26,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 @RestController
-@RequiredArgsConstructor
 @Tag(name = "LocationCRUD", description = "여행 지역 정보 등록,수정,삭제,조회 API 입니다.")
 @RequestMapping("/locations")
 class LocationController(

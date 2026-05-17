@@ -7,7 +7,6 @@ import com.retrip.map.application.`in`.usecase.LocationSearchUseCase
 import com.retrip.map.application.out.repository.LocationSearchHistoryRepository
 import com.retrip.map.application.out.repository.LocationSearchQueryRepository
 import com.retrip.map.domain.entity.LocationSearchHistory
-import lombok.RequiredArgsConstructor
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -16,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 class LocationSearchService(
     val locationSearchQueryRepository: LocationSearchQueryRepository,

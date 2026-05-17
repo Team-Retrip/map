@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 
 interface LocationRecentSearchUseCase {
-    fun getRecentLocation( context: UserContext) : LocationRecentSearchResponse?
+    fun getRecentLocation(context: UserContext): LocationRecentSearchResponse
     fun addLocationRecentSearch(locationRecentSearchModel: LocationRecentSearchModel)
-    fun delectRecentLocationsByKeyword(context: UserContext, keyword: String?)
+    fun deleteRecentLocationsByKeyword(context: UserContext, keyword: String?)
 }
